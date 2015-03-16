@@ -1,0 +1,40 @@
+<VirtualHost *:81>
+	ServerAdmin webmaster@localhost
+
+	DocumentRoot /var/www
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride None
+	</Directory>
+	<Directory /var/www/>
+		Options -Indexes +SymLinksifOwnerMatch +ExecCGI
+		allow from all
+		AllowOverride All Options=ExecCGI,Includes,IncludesNOEXEC,Indexes,MultiViews,SymLinksIfOwnerMatch
+		AddHandler fcgid-script .php
+		AddHandler fcgid-script .php5
+		FCGIWrapper /var/www/fcgi-bin/php5.fcgi .php
+		FCGIWrapper /var/www/fcgi-bin/php5.fcgi .php5
+		AddType application/x-httpd-php .php
+	</Directory>
+
+	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+	<Directory "/usr/lib/cgi-bin">
+		AllowOverride None
+		Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+		Order allow,deny
+		Allow from all
+	</Directory>
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+
+	# Possible values include: debug, info, notice, warn, error, crit,
+	# alert, emerg.
+	LogLevel warn
+
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+DirectoryIndex index.php update.php
+RemoveHandler .php
+RemoveHandler .php5
+IPCCommTimeout 161
+FcgidMaxRequestLen 1073741824
+</VirtualHost>
